@@ -1,2 +1,2 @@
 # bus-transport-company-administration-system
-Administration system for a bus transport company
+PHP + PostgreSQL university project. Simple administration system for a bus transport company
