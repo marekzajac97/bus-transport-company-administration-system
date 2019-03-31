@@ -1,0 +1,152 @@
+create table users(
+    uid serial primary key not null,
+    username text not null unique,
+    password text not null
+);
+create table przystanki(
+    pid serial primary key not null,
+    nazwa text not null unique
+);
+create table linie(
+    lid serial primary key not null,
+    start_pid int references przystanki(pid) not null,
+    end_pid_dist int[] not null,
+    inter_pid_dist int[][],
+    check (array_length(end_pid_dist,1)=2),
+    check (inter_pid_dist isnull or (array_ndims(inter_pid_dist)=2 and array_length(inter_pid_dist,2)=2))
+);
+create table kursy(
+    kursid serial primary key,
+    data_odjazdu timestamp not null,
+    autoid int references autokary(autoid),
+    kierid int references kierowcy(kierid),
+    lid int references linie(lid)
+);
+create table autokary(
+    autoid serial primary key not null,
+    producent text not null,
+    model text not null,
+    lmiejsc int not null
+    check (lmiejsc > 0)
+);
+create table kierowcy(
+    kierid serial primary key not null,
+    imie text not null,
+    nazwisko text not null,
+    telefon text not null,
+    check ( length(telefon) = 9)
+);
+create table rezerwacje(
+    rezid serial primary key not null,
+    imie text not null,
+    nazwisko text not null,
+    telefon text not null,
+    email text not null,
+    kursid int references kursy(kursid) not null,
+    uwagi text,
+    from_pid int references przystanki(pid) not null,
+    to_pid int references przystanki(pid) not null,
+    check ( length(telefon) = 9),
+    check ( email ~ '[^@]+@[^\.]+\..+')
+);
+create or replace function pid_check () returns trigger as '
+declare
+    x int[];
+begin
+ IF NOT EXISTS (select * from przystanki where pid = NEW.end_pid_dist[1]) THEN
+    RAISE EXCEPTION ''Podany PID = % przystanku koncowego nie istnieje w tabeli przystanki'', NEW.end_pid_dist[1];
+    return NULL;
+ END IF;
+ IF NEW.inter_pid_dist IS NOT NULL THEN
+  FOREACH x SLICE 1 IN ARRAY NEW.inter_pid_dist
+  LOOP
+    IF NOT EXISTS (select * from przystanki where pid = x[1]) THEN
+        RAISE EXCEPTION ''Podany PID = % dla przystanku posredniego nie istnieje w tabeli przystanki'', x[1];
+        return NULL;
+    END IF;
+  END LOOP;
+ END IF;
+ return NEW;
+end;
+' language 'plpgsql';
+create trigger pid_check_trigger before insert or update on linie for each row execute procedure pid_check();
+
+create or replace function isEnoughSpaceCheck() returns trigger as '
+declare
+    liczba_miejsc_nowa int;
+    liczba_rezerwacji int;
+begin
+    liczba_miejsc_nowa := (select lmiejsc from autokary where autoid = NEW.autoid );
+    liczba_rezerwacji := (select count(*) from rezerwacje where kursid = NEW.kursid);
+    IF( liczba_rezerwacji < liczba_miejsc_nowa) THEN
+        return NEW;
+    ELSE
+        RAISE EXCEPTION ''Zmiana autobusu nie mozliwa, liczba miejsc nie wystarczy dla wszytskich zapisanych na ten kurs'';
+        return NULL;
+    END IF;
+end;
+' language 'plpgsql';
+create trigger isEnoughSpaceCheckTrigger before update on kursy for each row execute procedure isEnoughSpaceCheck();
+
+create or replace function checkIfPidExistsInLinie() returns trigger as '
+declare
+    x int[];
+    r linie%rowtype;
+begin
+ IF EXISTS (select * from linie where end_pid_dist[1] = OLD.pid) THEN
+    RAISE EXCEPTION ''Podany PID = % przystanku koncowego ma wciąż odwołanie w tabeli linie'', OLD.pid;
+    return NULL;
+ END IF;
+ FOR r IN select * from linie WHERE inter_pid_dist IS NOT NULL LOOP
+    FOREACH x SLICE 1 IN ARRAY r.inter_pid_dist LOOP
+        IF x[1] = OLD.pid THEN
+        RAISE EXCEPTION ''Podany PID = % dla przystanku posredniego ma wciąż odwołanie w tabeli linie'', OLD.pid;
+        return NULL;
+        END IF;
+    END LOOP;
+ END LOOP;
+ return NEW;
+end;
+' language 'plpgsql';
+create trigger checkIfPidExistsInLinie_trigger before delete on przystanki for each row execute procedure checkIfPidExistsInLinie();
+
+create or replace function check_book_lines () returns trigger as '
+begin
+ IF EXISTS (select * from linie join kursy using(lid) join rezerwacje using(kursid) where lid=NEW.lid) THEN
+    RAISE EXCEPTION ''Istnieje rezerwacja na kurs na wybrana linie - linia nie moze zostac zmodyfikowana'';
+    return NULL;
+ END IF;
+ return NEW;
+end;
+' language 'plpgsql';
+create trigger check_book_lines_trigger before update on linie for each row execute procedure check_book_lines();
+
+create or replace function check_book_kursy () returns trigger as '
+begin
+IF (NEW.lid <> OLD.lid OR NEW.autoid <> OLD.autoid OR NEW.data_odjazdu <> OLD.data_odjazdu) THEN
+    IF EXISTS (select * from kursy join rezerwacje using(kursid) where kursid=NEW.kursid) THEN
+        RAISE EXCEPTION ''Istnieje rezerwacja na wybrany kurs - kurs nie moze zostac zmodyfikowany'';
+        return NULL;
+    END IF;
+    return NEW;
+ELSE
+    return NEW;
+END IF;
+end;
+' language 'plpgsql';
+create trigger check_book_kursy_trigger before update on kursy for each row execute procedure check_book_kursy();
+
+create or replace function check_book_autokary () returns trigger as '
+begin
+IF (NEW.lmiejsc < OLD.lmiejsc) THEN
+    IF EXISTS (select * from kursy join autokary using(autoid) join rezerwacje using(kursid) where autoid=NEW.autoid) THEN
+        RAISE EXCEPTION ''Istnieje rezerwacja na kurs gdzie wybrany autokar jest wpisany - liczba miejsc nie moze zostac zmodyfikowana'';
+        return NULL;
+    END IF;
+    return NEW;
+ELSE
+    return NEW;
+END IF;
+end;
+' language 'plpgsql';
+create trigger check_book_kursy_autokary before update on autokary for each row execute procedure check_book_autokary();

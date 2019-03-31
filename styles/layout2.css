@@ -1,0 +1,319 @@
+/*
+HTML 5 Template Name: Basic 83
+File: Layout CSS
+Author: OS Templates
+Author URI: https://www.os-templates.com/
+Licence: <a href="https://www.os-templates.com/template-terms">Website Template Licence</a>
+*/
+
+html{overflow-y:scroll;} /* Forces a scrollbar when the viewport is larger than the websites content - CSS3 */
+
+body{margin:0; padding:0; font-size:13px; font-family: "Trebuchet MS", Arial, Helvetica, sans-serif; color:#919191; background-color:#232323;}
+
+.clear:after{content:"."; display:block; height:0; clear:both; visibility:hidden; line-height:0;}
+.clear{display:block; clear:both;}
+html[xmlns] .clear{display:block;}
+* html .clear{height:1%;}
+
+a{outline:none; text-decoration:none;}
+
+.fl_left{float:left;}
+.fl_right{float:right;}
+
+/* ----------------------------------------------Wrapper-------------------------------------*/
+
+div.wrapper{display:block; width:100%; margin:0; padding:0; text-align:left;}
+
+.row1, .row1 a{color:#C0BAB6; background-color:#333333;}
+.row2{color:#979797; background-color:#FFFFFF;}
+.row2 a{color:#FF9900; background-color:#FFFFFF;}
+.row3, .row3 a{color:#919191; background-color:#232323;}
+
+/*----------------------------------------------Generalise-------------------------------------*/
+
+#header, #container, #footer{display:block; width:960px; margin:0 auto;}
+
+.one_quarter, .two_quarter, .three_quarter, .four_quarter{display:block; float:left; margin:0 20px 0 0; }
+.one_quarter{width:225px;}
+.two_quarter{width:470px;}
+.three_quarter{width:715px;}
+.four_quarter{width:960px; float:none; margin-right:0; clear:both;}
+.lastbox{margin-right:0;}
+
+.modal-content-container form{margin:20px;}
+.modal-content-container h2{margin:20px;}
+.errorContainer{
+   font-size:15px;
+   color:#cc0000;
+   margin:10px
+}
+.notificationContainer{
+   font-size:15px;
+   color: black;
+   margin:10px
+}
+* {
+  box-sizing: border-box;
+}
+.modal-content-container .col-05 {
+  float: left;
+  width: 5%;
+  margin-top: 6px;
+}
+.modal-content-container .col-20 {
+  float: left;
+  width: 20%;
+  margin-top: 6px;
+}
+.modal-content-container .col-25 {
+  float: left;
+  width: 25%;
+  margin-top: 6px;
+}
+.modal-content-container .col-50 {
+  float: left;
+  width: 50%;
+  margin-top: 6px;
+}
+
+.modal-content-container .col-75 {
+  float: left;
+  width: 75%;
+  margin-top: 6px;
+}
+.modal-content-container .col-100 {
+  float: left;
+  width: 100%;
+  margin-top: 6px;
+}
+.modal-content-container input[type=text],
+.modal-content-container input[type=password],
+.modal-content-container input[type=datetime-local],
+.modal-content-container input[type=email],
+.modal-content-container input[type=number],
+.modal-content-container select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  resize: vertical;
+}
+.modal-content-container label {
+  padding: 12px 12px 12px 0;
+  display: inline-block;
+}
+
+.modal-content-container input[type=submit] {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  float: right;
+}
+
+.modal-content-container input[type=submit]:hover {
+  background-color: #45a049;
+}
+.modal-content-container .row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+#list {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#list td, #list th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#list tr:nth-child(even){background-color: #f2f2f2;}
+
+#list tr:hover {background-color: #ddd;}
+
+#list th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
+/*----------------------------------------------Header-------------------------------------*/
+
+#header{padding:20px 0;}
+
+#header #hgroup{float:left; margin:0 0 10px 0;}
+#header #hgroup h1, #header #hgroup h2{font-weight:normal; text-transform:none;}
+#header #hgroup h1{font-size:36px; margin: 5px;}
+#header #hgroup h2{font-size:16px; margin: 5px;}
+
+/*--------------------------------------NAVBAR -------------------------------*/
+#header nav{display:block; width:100%; margin:0; background-color:#232323; clear:both;}
+
+#header nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  /*background-color: #333;*/
+}
+
+#header nav li {
+  float: left;
+}
+
+#header nav li a {
+  background-color:#232323;
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+#header nav li a:hover:not(.active) {
+  background-color: #111;
+}
+
+#header nav .active {
+  background-color: #4CAF50;
+}
+
+/*----------------------------------------------Content Area-------------------------------------*/
+
+#container{padding:30px 0; min-height: 70%;}
+#container .section{display:block; width:100%; margin:0 0 10px 0; padding:0;}
+#container .last{margin:0;}
+#container .more{text-align:right;}
+
+/*----------------------------------------------Footer-------------------------------------*/
+
+#footer{padding:20px 0;}
+#footer p{margin:0; padding:0;}
+
+#searchInput {
+  background-image: url('/images/searchicon.png');
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin: 8px 0;
+}
+
+/* MODAL */
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+.close-container {
+  text-align:center;
+  margin: 24px 0 12px 0;
+  position: relative;
+}
+
+.modal-content-container {
+  padding: 16px;
+}
+.button-container{
+  text-align:center;
+}
+.delete-button{
+  background-color: #f44336;
+}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  padding-top: 60px;
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+  border: 1px solid #888;
+  width: 40%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button (x) */
+.close {
+  position: absolute;
+  right: 25px;
+  top: 0;
+  color: #000;
+  font-size: 35px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: red;
+  cursor: pointer;
+}
+
+/* Add Zoom Animation */
+.animate {
+  /*-webkit-animation: animatezoom 0.2s;
+  animation: animatezoom 0.2s */
+}
+
+@-webkit-keyframes animatezoom {
+  from {-webkit-transform: scale(0)} 
+  to {-webkit-transform: scale(1)}
+}
+  
+@keyframes animatezoom {
+  from {transform: scale(0)} 
+  to {transform: scale(1)}
+}
+
+.remove {
+  padding: 10px;
+  color: #000;
+  font-size: 20px;
+  font-weight: bold;
+}
+.remove:hover,
+.remove:focus {
+  color: red;
+  cursor: pointer;
+}
+
+.LoginBoxContainer{
+   background-color: white;
+   margin: auto;
+   width:300px;
+   border: solid 1px #333333;
+}
+.loginContainer{
+   background-color:#666666;
+   color:#FFFFFF;
+   padding:3px;
+}
